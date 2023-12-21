@@ -17,4 +17,6 @@
     <string name="observations">Observaciones</string>
     <string name="select_hour">Selecciona hora y minuto</string>
     <string name="acept">Aceptar</string>
+    <string name="time_init">Selecciona la Hora de inicio</string>
+    <string name="cancel">Cancelar</string>
 </resources>

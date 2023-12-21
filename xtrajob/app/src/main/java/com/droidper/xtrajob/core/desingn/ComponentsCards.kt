@@ -175,6 +175,9 @@ fun WorkBreak(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         when (hours.size) {
+            0 -> {
+                Text(text = "-")
+            }
             1 -> {
                 Text(
                     text = hours[0],

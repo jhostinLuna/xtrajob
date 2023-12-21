@@ -4,7 +4,9 @@ import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,12 +40,20 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.droidper.xtrajob.R
+import com.droidper.xtrajob.core.desingn.BoxHourMedium
+import com.droidper.xtrajob.core.desingn.DialogTimeInitAndFinish
 import com.droidper.xtrajob.core.desingn.DialogTimePicker
 import com.droidper.xtrajob.core.desingn.RowHourMinute
 import com.droidper.xtrajob.core.desingn.TopAppBarBasic
+import com.droidper.xtrajob.core.desingn.WorkBreak
+import com.droidper.xtrajob.core.extensions.setMinAndHour
 import com.droidper.xtrajob.feature.home.RowTitleWithContent
+import com.droidper.xtrajob.model.RecordDay
 import com.droidper.xtrajob.ui.theme.AppTheme
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(
     device = Devices.PIXEL_4_XL,
     showBackground = true,
@@ -58,6 +68,11 @@ import com.droidper.xtrajob.ui.theme.AppTheme
 )
 @Composable
 fun NewDayScreenPreview(){
+    val startBreakTimepickerState = rememberTimePickerState()
+    val endBreakTimepickerState = rememberTimePickerState()
+    val newDayState by remember {
+        mutableStateOf(RecordDay())
+    }
     AppTheme {
         NewDayScreen(
             onPressBack = {}
@@ -73,6 +88,19 @@ fun NewDayScreen(
 
     val startTimepickerState = rememberTimePickerState()
     val endTimePickerState = rememberTimePickerState()
+    val recordDay = RecordDay()
+    val startTimeWork by remember {
+        mutableStateOf(0L)
+    }
+    val endTimeWork by remember {
+        mutableStateOf(0L)
+    }
+    var startTimeBreakWork by remember {
+        mutableStateOf(0L)
+    }
+    val endTimeBreakWork by remember {
+        mutableStateOf(0L)
+    }
     Scaffold(
         topBar = {
             TopAppBarBasic(
@@ -102,11 +130,15 @@ fun NewDayScreen(
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPaddingValue),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(innerPaddingValue)
+                .fillMaxWidth()
+                .padding(horizontal = 40.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            RowTitleWithContent(title = stringResource(id = R.string.newday_title1), topSpacer = 10.dp, bottomSpacer = 10.dp) {
+            RowTitleWithContent(
+                modifier = Modifier
+                    .padding(vertical = 10.dp),
+                title = stringResource(id = R.string.newday_title1)) {
 
             }
             // Hora Inicio
@@ -148,7 +180,10 @@ fun NewDayScreen(
             Spacer(modifier = Modifier.height(50.dp))
 
             //Hora Fin
-            RowTitleWithContent(title = stringResource(id = R.string.newday_title2), topSpacer = 10.dp, bottomSpacer = 10.dp) {
+            RowTitleWithContent(
+                modifier = Modifier
+                    .padding(vertical = 10.dp),
+                title = stringResource(id = R.string.newday_title2)) {
 
             }
             Surface(
@@ -190,15 +225,41 @@ fun NewDayScreen(
             var switchBreakWorkState by remember {
                 mutableStateOf(false)
             }
-            RowTitleWithContent(title = stringResource(id = R.string.newday_title3), topSpacer = 10.dp, bottomSpacer = 10.dp) {
-                Switch(checked = switchBreakWorkState, onCheckedChange = {switchBreakWorkState = !switchBreakWorkState})
+            var showDialogTime by remember {
+                mutableStateOf(false)
+            }
+            RowTitleWithContent(
+                modifier = Modifier
+                    .padding(vertical = 10.dp),
+                title = stringResource(id = R.string.newday_title3)) {
+                //Switch(checked = switchBreakWorkState, onCheckedChange = {switchBreakWorkState = !switchBreakWorkState})
             }
             var observationState by remember {
                 mutableStateOf("")
             }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                WorkBreak(
+                    modifier = Modifier
+                        .clickable { showDialogTime = true },
+                    hours = emptyList())
+                BoxHourMedium(number = "0h")
+            }
+            DialogTimeInitAndFinish(
+                title = stringResource(id = R.string.time_init),
+                showState = showDialogTime,
+                onclickCancel = { showDialogTime = false },
+                onclickAccept = {minute, hour ->
+                    //startTimeBreakWork = LocalDateTime.now().setMinAndHour(minute,hour).toEpochSecond(ZoneOffset.UTC) * 1000
+                })
+
             BasicTextField(
                 modifier = Modifier
-                    .padding(horizontal = 40.dp)
                     .fillMaxWidth()
                     .height(136.dp),
                 value = observationState,
@@ -220,13 +281,11 @@ fun NewDayScreen(
                         }else {
                             Text(text = observationState)
                         }
-                        
+
                     }
                 }
             )
         }
     }
-
-
 
 }

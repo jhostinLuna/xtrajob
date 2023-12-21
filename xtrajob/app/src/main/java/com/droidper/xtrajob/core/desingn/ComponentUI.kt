@@ -58,6 +58,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.droidper.xtrajob.R
 import com.droidper.xtrajob.ui.theme.AppTheme
+import com.droidper.xtrajob.ui.theme.blueDE
 
 
 @Preview(
@@ -88,6 +89,8 @@ fun HeaderHomePreview() {
                 onclickRegister = {}
             )
             HeaderListDaysRecorded()
+            Spacer(modifier = Modifier.height(8.dp))
+            BoxHourMedium(number = "8h")
         }
 
     }
@@ -264,6 +267,34 @@ fun BoxHour(number: String) {
     }
 }
 @Composable
+fun BoxHourMedium(number: String){
+    Surface(
+        modifier = Modifier
+            .width(41.dp)
+            .height(45.dp),
+        shape = RoundedCornerShape(4.dp),
+        color = Color.Black.copy(0f),
+        border = BorderStroke(2.dp, blueDE)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Text(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                text = number,
+                maxLines = 1,
+                overflow = TextOverflow.Clip,
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color = blueDE
+            )
+        }
+
+    }
+}
+@Composable
 fun HeaderListDaysRecorded(
     modifier: Modifier = Modifier
 ){
@@ -364,4 +395,69 @@ fun DialogTimePickerPreview () {
         onClickAccept = {},
         onDismiss = {}
     )
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(
+    device = Devices.PIXEL_3A
+)
+@Composable
+fun DialogSetInitAndFinishTimePreview(){
+    DialogTimeInitAndFinish(
+        title = stringResource(id = R.string.time_init),
+        showState = true,
+        onclickAccept = {minute, hour ->
+        },
+        onclickCancel = {
+        }
+    )
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DialogTimeInitAndFinish(
+    title: String,
+    showState: Boolean = false,
+    onclickCancel: () -> Unit,
+    onclickAccept: (minute:Int,hour: Int) -> Unit,
+
+    ){
+    val timepickerState = rememberTimePickerState()
+    if (showState) {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 40.dp, vertical = 20.dp)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter),
+                    text = title,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+                TimePicker(
+                    modifier = Modifier
+                        .align(Alignment.Center),
+                    state = timepickerState )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Button(onClick = onclickCancel) {
+                        Text(text = stringResource(id = R.string.cancel))
+                    }
+                    Button(onClick = { onclickAccept(timepickerState.minute, timepickerState.hour) }) {
+                        Text(text = stringResource(id = R.string.acept))
+                    }
+                }
+            }
+        }
+    }
+
+
 }

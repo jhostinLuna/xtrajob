@@ -58,7 +58,7 @@ fun XtraJobComposeApp (
         }
         composable(route = Screen.NewDay.route) {
             NewDayScreen {
-
+                navHostController.navigateUp()
             }
         }
     }

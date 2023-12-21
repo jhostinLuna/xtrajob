@@ -88,6 +88,8 @@ fun HomeScreen(
         ) {
 
             RowTitleWithContent(
+                modifier = Modifier
+                    .padding(start = 40.dp, end = 40.dp),
                 title = stringResource(id = R.string.title_home_1),
                 contentRight = {
                     TextButton(onClick = navigateToCalendarScreen) {
@@ -109,7 +111,10 @@ fun HomeScreen(
                     }
                 }
             }
-            RowTitleWithContent(title = stringResource(id = R.string.title_home_2), topSpacer = 60.dp, bottomSpacer = 25.dp) {
+            RowTitleWithContent(
+                modifier = Modifier
+                    .padding(top = 60.dp, bottom = 25.dp, start = 40.dp, end = 40.dp),
+                title = stringResource(id = R.string.title_home_2)) {
 
             }
             LazyRow(
@@ -120,7 +125,10 @@ fun HomeScreen(
                     CardDayHoursMoney(date = LocalDate.now(), hoursDay = "9h", money = "70€")
                 }
             }
-            RowTitleWithContent(title = stringResource(id = R.string.title_home_3), topSpacer = 60.dp, bottomSpacer = 25.dp) {
+            RowTitleWithContent(
+                modifier = Modifier
+                    .padding(top = 60.dp, bottom = 25.dp, start = 40.dp, end = 40.dp),
+                title = stringResource(id = R.string.title_home_3)) {
 
             }
             LazyRow(
@@ -143,17 +151,11 @@ fun HomeScreen(
 fun RowTitleWithContent(
     modifier: Modifier = Modifier,
     title: String,
-    topSpacer: Dp = 0.dp,
-    bottomSpacer: Dp = 0.dp,
     contentRight: @Composable () -> Unit
 ){
 
     Row(
         modifier = modifier
-            .padding(top = topSpacer,
-                bottom = bottomSpacer,
-                start = 40.dp,
-                end = 40.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
